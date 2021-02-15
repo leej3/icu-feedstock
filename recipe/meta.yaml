@@ -21,21 +21,32 @@ source:
     folder: source/data
 
 build:
+{% if bootstrapping == 'yes' %}
+  # Please increment by two
   number: 0
+  string: h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}_bootstrapping
+{% else %}
+  # Keep above the number of the _bootstrapping package
+  number: 1
+{% endif %}
   run_exports:
     # icu changes their file extension with each major rev.  Default pin OK.
     - {{ pin_subpackage('icu') }}
+  script_env:
+    - BOOTSTRAPPING={{ bootstrapping }}
 
 requirements:
   build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+{% if bootstrapping != 'yes' %}
     - m2-base  # [win]
     - m2-make  # [win]
     - libtool  # [unix]
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
     - make     # [unix]
   host:
   run:
+{% endif %}
 
 test:
   files:

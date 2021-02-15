@@ -1,6 +1,9 @@
 #!/bin/bash
-# Get an updated config.sub and config.guess
-cp $BUILD_PREFIX/share/libtool/build-aux/config.* ./source
+
+if [[ ! $BOOTSTRAPPING == yes ]]; then
+  # Get an updated config.sub and config.guess
+  cp $BUILD_PREFIX/share/libtool/build-aux/config.* ./source
+fi
 
 set -e
 
